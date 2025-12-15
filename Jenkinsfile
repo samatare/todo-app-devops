@@ -14,7 +14,14 @@ pipeline {
         }
        stage('deploy') {
             steps {
-                echo 'deploying the app'
+                script{
+                def dockercmd ='docker run -p 3080:3080 -d samatare/react-nodejs-example_aws:1.0'
+                echo 'deploying the app and ssh to the AWS'
+                 sshagent(['ec2_server_key']) {
+                        sh "ssh -o StrictHostKeyChecking=no ec2-user@34.204.166.254 ${dockercmd} "
+                    }
+
+                }
             }
         }
     }
